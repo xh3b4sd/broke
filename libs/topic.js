@@ -48,7 +48,7 @@ Topic.prototype.create = function create(vowsContext, brokeContext) {
         if(typeof brokeContext.process.method === 'function') type = 'topicMethod';
         else if(typeof brokeContext.process.request === 'object') type = 'topicRequest';
 
-        self.callback = Topic.callback(brokeContext, self.callback);
+        self.callback = Topic.callback.call(self, brokeContext, self.callback);
 
         Manipulation.timeoutStart(brokeContext);
         Manipulation.delay(brokeContext, function() {
@@ -106,10 +106,7 @@ Topic.topicError = function topicError(vowsContext, brokeContext) {
 };
 
 /*
- * Wrap vows callback function for better control flow. The
- * variable "self" is availabe here, because the scope, in
- * wich the returned function is called, is that one, that
- * provides the variable "self".
+ * Wrap vows callback function for better control flow.
  *
  * @param function cb, vows "this.callback".
  *
@@ -117,6 +114,8 @@ Topic.topicError = function topicError(vowsContext, brokeContext) {
  * @return function callback, the wrapped callback function.
  */
 Topic.callback = function callback(brokeContext, cb) {
+    var self = this;
+
     return function callback() {
         var args = [].slice.call(arguments);
 
