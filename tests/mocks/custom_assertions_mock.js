@@ -38,7 +38,31 @@ var customAssertions = {
         };
 
         return assertion;
-    }
+    },
+
+    /*
+     * Broken assertion that dont supports a method.
+     */
+    brokenAssertion: function brokenAssertion() {
+        var assertion = {};
+
+        assertion['that assertion is no function'] = [];
+
+        return assertion;
+    },
+
+    /*
+     * Broken assertion that dont returns an object.
+     */
+    anotherBrokenAssertion: function brokenAssertion() {
+        var assertion = [];
+
+        assertion[0] = function(err, data) {
+            assert.isNull(err);
+        };
+
+        return assertion;
+    },
 };
 
 module.exports = customAssertions;

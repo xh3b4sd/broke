@@ -75,13 +75,20 @@ Assert.prototype.inject = function inject(injectedCustomAssertions) {
  * @param !function brokeAssertion, the expected parameter for a custom assertion.
  */
 Assert.merge = function merge(vowsContext, brokeAssertionName, brokeAssertion) {
-    var customAssertion = customAssertions[brokeAssertionName](brokeAssertion);
+    var err = 'Invalid custom assertion "' + brokeAssertionName + '"'
+      , customAssertion = customAssertions[brokeAssertionName];
 
-    Object.keys(customAssertion).forEach(function(assertionName) {
-        var assertion = customAssertion[assertionName];
+    if(typeof customAssertion !== 'function') return log.error(new Error(err).stack);
+
+    var methods = customAssertion(brokeAssertion);
+
+    if(typeof methods !== 'object' || Array.isArray(methods)) return log.error(new Error(err).stack);
+
+    Object.keys(methods).forEach(function(assertionName) {
+        var assertion = methods[assertionName];
 
         if(typeof assertion === 'function') vowsContext[assertionName] = assertion;
-        else log.error(new Error('Invalid custom assertion "' + brokeAssertionName + '"').stack);
+        else log.error(new Error(err).stack);
     });
 };
 
