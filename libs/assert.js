@@ -48,9 +48,13 @@ Assert.prototype.create = function create(vowsContext, brokeContext) {
  * Set injected custom assertions as local variable.
  *
  * @param object customAssertions, injected custom assertions.
+ *
+ * @return object customAssertions, injected custom assertions.
  */
 Assert.prototype.inject = function inject(injectedCustomAssertions) {
     customAssertions = injectedCustomAssertions;
+
+    return customAssertions;
 };
 
 
