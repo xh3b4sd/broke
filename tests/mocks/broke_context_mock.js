@@ -3,6 +3,7 @@
  */
 
 var brokeContexts = [
+    // Working batches
     {
         'init the test suite': {
             process: {
@@ -34,6 +35,8 @@ var brokeContexts = [
             }
         }
     },
+
+    // Broken batches
     {
         'test case using broken custom assertion': {
             config: {
@@ -64,6 +67,32 @@ var brokeContexts = [
             assert: {
                 anotherBrokenAssertion: 'that should not work'
             }
+        }
+    },
+    {
+        'test case without process phase': {
+            config: {
+                repeats: 5,
+                delay: 500,
+                calmDown: 500,
+                timeout: 2000
+            },
+            assert: {
+                anotherBrokenAssertion: 'that should not work'
+            }
+        }
+    },
+    {
+        'test case without assert phase': {
+            config: {
+                repeats: 5,
+                delay: 500,
+                calmDown: 500,
+                timeout: 2000
+            },
+            process: {
+                request: {method: 'GET', url: 'http://google.com', options: {port: 80}}
+            },
         }
     }
 ];

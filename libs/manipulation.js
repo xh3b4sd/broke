@@ -5,19 +5,21 @@
  */
 
 /*
- * Module variables.
+ * Class definition.
  */
-var defaultConfigs = {
+function Manipulation() {};
+
+
+
+/*
+ * Default config.
+ */
+Manipulation.prototype.defaultConfigs = {
     delay: 0,
     timeout: 0,
     repeats: 1,
     calmDown: 0
 };
-
-/*
- * Class definition.
- */
-function Manipulation() {};
 
 
 
@@ -36,6 +38,8 @@ function Manipulation() {};
  * @param object brokeContext, a given broke context.
  */
 Manipulation.prototype.config = function config(brokeContext) {
+    var defaultConfigs = this.defaultConfigs;
+
     brokeContext.config = brokeContext.config || {};
 
     Object.keys(defaultConfigs).forEach(function(config) {
@@ -65,11 +69,11 @@ Manipulation.prototype.delay = function delay(brokeContext, cb) {
  * @param function cb, callback to execute.
  */
 Manipulation.prototype.repeats = function repeats(brokeContext, cb) {
-    var i = 0
+    var i = 1
       , ii = brokeContext.config.repeats;
 
-    for(i; i < ii; i++) {
-        cb(' [#' + (i + 1) + ']');
+    for(i; i <= ii; i++) {
+        cb(' [#' + i + ']');
     }
 };
 
@@ -93,10 +97,9 @@ Manipulation.prototype.timeoutStart = function timeoutStart(brokeContext) {
 Manipulation.prototype.timeoutEnd = function timeoutEnd(brokeContext, args) {
     if(brokeContext.config.timeout === 0) return;
 
-    brokeContext.end = Date.now();
-    brokeContext.duration = brokeContext.end - brokeContext.start;
+    var duration = Date.now() - brokeContext.start;
 
-    if(brokeContext.duration > brokeContext.config.timeout) {
+    if(duration > brokeContext.config.timeout) {
         args.shift();
         args.unshift('Test case "' + brokeContext.name + '" timed out.');
     }

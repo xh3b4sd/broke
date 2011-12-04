@@ -46,9 +46,9 @@ TestCase.prototype.createBatch = function createBatch(brokeBatch) {
         var brokeContext = brokeBatch[contextName];
 
         // Validate process type.
-        if(typeof brokeContext.process !== 'object') {
-            return log.error(new Error('Invalid process type').stack);
-        }
+        if(typeof brokeContext.process !== 'object') var err = 'Invalid process phase';
+        if(typeof brokeContext.assert !== 'object') var err = 'Invalid assert phase';
+        if(typeof err === 'string') return log.error(new Error(err).stack);
 
         brokeContext.name = contextName;
         brokeContext.emitter = new EventEmitter;
