@@ -1,6 +1,11 @@
 
-var broke = require('broke')
+var broke = require('../libs/broke')
   , assert = require('assert');
+
+var config = {
+    processors: require('./custom_processors.js'),
+    assertions: require('./custom_assertions.js'),
+};
 
 broke
     .test('dummy test suite')
@@ -54,6 +59,6 @@ broke
         }
     })
 
-.run(module, require('./custom_assertions.js'));
+.run(module, config);
 
 

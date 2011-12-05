@@ -15,6 +15,7 @@ var vows = require('vows')
  * App modules.
  */
 var TestCase = require('./test_case.js')
+  , Topic = require('./topic.js')
   , Assert = require('./assert.js');
 
 /*
@@ -87,14 +88,17 @@ Broke.prototype.stop = function stop(stopPhase) {
  * Run a test. If there is no batch defined, return with an error.
  *
  * @param object module, executing module instance.
- * @param object customAssertions, custom assertions a test suite can use.
+ * @param object config, test suite config to inject custom stuff.
  */
-Broke.prototype.run = function run(module, customAssertions) {
+Broke.prototype.run = function run(module, config) {
     if(typeof module === 'undefined') var err = 'No module to export defined.';
     if(this.batches.length === 0) var err = 'No batches defined.';
     if(typeof err === 'string') return log.error(new Error(err).stack);
 
-    if(typeof customAssertions === 'object') this.customAssertions = Assert.inject(customAssertions);
+    if(typeof config === 'object') {
+        if(typeof config.processors === 'object') this.processors = Topic.inject(config.processors);
+        if(typeof config.assertions === 'object') this.assertions = Assert.inject(config.assertions);
+    }
 
     batches.call(this);
 

@@ -1,6 +1,6 @@
 /*
  *
- * Request module.
+ * Request Processor module.
  *
  */
 
@@ -112,8 +112,22 @@ Request.events = function events(res, cb) {
     });
 };
 
+
 /*
- * Export the module.
+ * Process the topic request in the scope of a vows topic.
+ *
+ * @param object vowsContext, the vows context to add the topic.
+ * @param object brokeContext, a given broke context.
  */
-module.exports = new Request;
+module.exports = function requestProcessor(vowsContext, brokeContext) {
+    var request = new Request
+      , brokeReq = brokeContext.process.request;
+
+    if(typeof brokeReq.method !== 'string') var err = 'No request method given';
+    if(typeof brokeReq.url !== 'string') var err = 'No request url given';
+    if(typeof err === 'string') return log.error(new Error(err).stack);
+
+    request.options(brokeReq);
+    request.process.call(this, brokeReq);
+};
 

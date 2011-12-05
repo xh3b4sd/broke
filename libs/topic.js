@@ -16,6 +16,11 @@ var Manipulation = require('./manipulation.js')
   , Request = require('./request.js');
 
 /*
+ * Module variables.
+ */
+var customProcessors = {};
+
+/*
  * Class definition.
  */
 function Topic() {};
@@ -41,20 +46,36 @@ function Topic() {};
  */
 Topic.prototype.create = function create(vowsContext, brokeContext) {
     vowsContext.topic = function topic() {
-        var self = this
-          , type = 'topicError';
+        var self = this;
 
-        // Execute given process phases.
-        if(typeof brokeContext.process.method === 'function') type = 'topicMethod';
-        else if(typeof brokeContext.process.request === 'object') type = 'topicRequest';
+        // Execute first given process phases.
+        var processPhaseName = Object.keys(brokeContext.process)[0]
+          , processPhase = customProcessors[processPhaseName];
+
+        if(typeof processPhase === 'undefined') {
+            return log.error(new Error('Invalid process phase "' + processPhaseName + '".').stack);
+        }
 
         self.callback = Topic.callback.call(self, brokeContext, self.callback);
 
         Manipulation.timeoutStart(brokeContext);
         Manipulation.delay(brokeContext, function() {
-            Topic[type].call(self, vowsContext, brokeContext);
+            processPhase.call(self, vowsContext, brokeContext);
         });
     };
+};
+
+/*
+ * Set injected custom processors as local variable.
+ *
+ * @param object injectedProcessors, injected custom processors.
+ *
+ * @return object customProcessors, injected custom processors.
+ */
+Topic.prototype.inject = function inject(injectedProcessors) {
+    customProcessors = injectedProcessors;
+
+    return customProcessors;
 };
 
 
@@ -66,34 +87,6 @@ Topic.prototype.create = function create(vowsContext, brokeContext) {
  */
 
 
-
-/*
- * Just call the process function with the scope of a
- * vows topic.
- *
- * @param object vowsContext, the vows context to add the topic.
- * @param object brokeContext, a given broke context.
- */
-Topic.topicMethod = function topicMethod(vowsContext, brokeContext) {
-    brokeContext.process.method.call(this);
-};
-
-/*
- * Process the topic request in the scope of a vows topic.
- *
- * @param object vowsContext, the vows context to add the topic.
- * @param object brokeContext, a given broke context.
- */
-Topic.topicRequest = function topicRequest(vowsContext, brokeContext) {
-    var brokeReq = brokeContext.process.request;
-
-    if(typeof brokeReq.method !== 'string') var err = 'No request method given';
-    if(typeof brokeReq.url !== 'string') var err = 'No request url given';
-    if(typeof err === 'string') return log.error(new Error(err).stack);
-
-    Request.options(brokeReq);
-    Request.process.call(this, brokeReq);
-};
 
 /*
  * Just throws a error.

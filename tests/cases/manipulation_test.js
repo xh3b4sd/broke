@@ -149,8 +149,8 @@ vows
             'should not delay the callback execution': function(err, brokeContext) {
                 var duration = Date.now() - brokeContext.start;
 
-                // Callback execution should not be delayed more than 5 ms.
-                assert.isTrue(duration < 5);
+                // Callback execution should not be delayed more than 10 ms.
+                assert.isTrue(duration < 10);
             }
         },
         'call delay() with brokeContext.config.delay = 100': {
@@ -250,7 +250,7 @@ vows
             },
             'should initialize brokeContext.start with current timestamp': function(err, brokeContext) {
                 assert.isNumber(brokeContext.start);
-                assert.isTrue(Date.now() - brokeContext.start < 5);
+                assert.isTrue(Date.now() - brokeContext.start < 10);
             }
         },
 
@@ -326,7 +326,7 @@ vows
                 var duration = Date.now() - brokeContext.start;
 
                 // Callback execution should not be calmDowned more than 5 ms.
-                assert.isTrue(duration < 5);
+                assert.isTrue(duration < 10);
             }
         },
         'call calmDown() with brokeContext.config.calmDown = 100': {

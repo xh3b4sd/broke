@@ -1,6 +1,6 @@
 /*
  *
- * Custom Assertions module.
+ * Custom Assertions Mock module.
  *
  */
 

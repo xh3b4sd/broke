@@ -7,6 +7,7 @@ var vows = require('vows')
 
 var Broke = require('../../libs/broke.js')
   , customAssertionsMock = require('../mocks/custom_assertions_mock.js')
+  , customProcessorsMock = require('../mocks/custom_processors_mock.js')
 
 vows
     .describe('broke')
@@ -235,17 +236,21 @@ vows
         },
         'call run() with module, custom assertions, and a defined test suite including batches': {
             topic: function() {
+                var configMock = {
+                    assertions: customAssertionsMock
+                };
+
                 var suite = Broke
                     .test('dummy test suite')
                     .batch({'dummy batch': {}})
-                    .run(module, customAssertionsMock);
+                    .run(module, configMock);
 
                 this.callback(undefined, suite);
             },
             'should return a test suite including the defined batch and custom assertions': function(err, suite) {
-                var keys = Object.keys(suite.customAssertions);
+                var keys = Object.keys(suite.assertions);
 
-                var customAssertionNames = [
+                var assertionNames = [
                     'statusCode',
                     'anotherAssertion',
                     'brokenAssertion',
@@ -255,8 +260,37 @@ vows
                 assert.isNull(err);
                 assert.isObject(suite);
                 assert.isArray(suite.suite.batches);
-                assert.isObject(suite.customAssertions);
-                assert.deepEqual(keys, customAssertionNames);
+                assert.isObject(suite.assertions);
+                assert.deepEqual(keys, assertionNames);
+                assert.equal(suite.suite.subject, 'dummy test suite');
+            }
+        },
+        'call run() with module, custom processors, and a defined test suite including batches': {
+            topic: function() {
+                var configMock = {
+                    processors: customProcessorsMock
+                };
+
+                var suite = Broke
+                    .test('dummy test suite')
+                    .batch({'dummy batch': {}})
+                    .run(module, configMock);
+
+                this.callback(undefined, suite);
+            },
+            'should return a test suite including the defined batch and custom processors': function(err, suite) {
+                var keys = Object.keys(suite.processors);
+
+                var processorNames = [
+                    'method',
+                    'request'
+                ];
+
+                assert.isNull(err);
+                assert.isObject(suite);
+                assert.isArray(suite.suite.batches);
+                assert.isObject(suite.processors);
+                assert.deepEqual(keys, processorNames);
                 assert.equal(suite.suite.subject, 'dummy test suite');
             }
         },
