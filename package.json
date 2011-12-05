@@ -1,0 +1,16 @@
+{
+  "name": "broke",
+  "version": "0.0.2",
+  "description": "Vowsjs layer for flexible unit and integration tests.",
+  "keywords": ["testframework", "unit tests", "tests", "integration tests"],
+  "author": "Tim Schindler <tim.schindler@adcloud.com>",
+  "contributors": [
+    {"name": "Tim Schindler", "email": "tim.schindler@adcloud.com"}
+  ],
+  "dependencies": {
+    "logerize": ">= 0.0.1",
+    "vows": ">= 0.5.11"
+  },
+  "bin": { "broke": "./bin/broke" },
+  "engines": { "node": ">= 0.4.9" }
+}
