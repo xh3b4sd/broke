@@ -2,6 +2,9 @@
  *
  * Custom Assertions module.
  *
+ * Custom assertions have to return an object that contains
+ * the tested assertion name as key and a function that tests
+ * the parameters you have injected into "this.callback()".
  */
 
 /*

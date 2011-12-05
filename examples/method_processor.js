@@ -6,7 +6,13 @@
 
 /*
  * Just call the process function with the scope of a
- * vows topic.
+ * vows topic. So you can do something like that:
+ *
+ *      process: {
+ *          method: function() {
+ *              // use vows "this.callback"
+ *          }
+ *      }
  *
  * @param object vowsContext, the vows context to add the topic.
  * @param object brokeContext, a given broke context.

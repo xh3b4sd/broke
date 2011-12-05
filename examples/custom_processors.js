@@ -2,6 +2,9 @@
  *
  * Custom Processors module.
  *
+ * Custom processors in their easiest form, just provides
+ * a function that is called in the scope of a vows topic.
+ * Look for examples/method_processor.js.
  */
 
 /*
