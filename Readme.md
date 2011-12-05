@@ -27,7 +27,10 @@
 ## Usage:
 
   For better documentation and usage look for the examples.
-  They are well commented.
+  They are well commented. **"examples/example_test.js"**
+  shows you how it works. So you can do this:
+
+    $ broke node_modules/broke/examples/example_test.js --spec
 
 
 
@@ -37,7 +40,7 @@
   error loggings. If the result says something like
   **"✓ OK » 37 honored (0.127s)"**, everything is fine.
 
-    $ vows node_modules/broke/tests/cases/* --spec
+    $ broke node_modules/broke/tests/cases/* --spec
 
 
 
