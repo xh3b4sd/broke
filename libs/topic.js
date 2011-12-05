@@ -12,8 +12,7 @@ var log = require('logerize');
 /*
  * App modules.
  */
-var Manipulation = require('./manipulation.js')
-  , Request = require('./request.js');
+var Manipulation = require('./manipulation.js');
 
 /*
  * Module variables.
