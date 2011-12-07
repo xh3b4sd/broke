@@ -15,11 +15,6 @@ var log = require('logerize');
 var Manipulation = require('./manipulation.js');
 
 /*
- * Module variables.
- */
-var customProcessors = {};
-
-/*
  * Class definition.
  */
 function Topic() {};
@@ -44,16 +39,16 @@ function Topic() {};
  * @param object brokeContext, a given broke context.
  */
 Topic.prototype.create = function create(vowsContext, brokeContext) {
+    // Execute first given process phases.
+    var processPhaseName = Object.keys(brokeContext.process)[0]
+      , processPhase = brokeContext.customProcessors[processPhaseName];
+
+    if(typeof processPhase !== 'function') {
+        return log.error(new Error('Invalid process phase "' + processPhaseName + '".').stack);
+    }
+
     vowsContext.topic = function topic() {
         var self = this;
-
-        // Execute first given process phases.
-        var processPhaseName = Object.keys(brokeContext.process)[0]
-          , processPhase = customProcessors[processPhaseName];
-
-        if(typeof processPhase === 'undefined') {
-            return log.error(new Error('Invalid process phase "' + processPhaseName + '".').stack);
-        }
 
         self.callback = Topic.callback.call(self, brokeContext, self.callback);
 
@@ -62,19 +57,6 @@ Topic.prototype.create = function create(vowsContext, brokeContext) {
             processPhase.call(self, vowsContext, brokeContext);
         });
     };
-};
-
-/*
- * Set injected custom processors as local variable.
- *
- * @param object injectedProcessors, injected custom processors.
- *
- * @return object customProcessors, injected custom processors.
- */
-Topic.prototype.inject = function inject(injectedProcessors) {
-    customProcessors = injectedProcessors;
-
-    return customProcessors;
 };
 
 
@@ -86,16 +68,6 @@ Topic.prototype.inject = function inject(injectedProcessors) {
  */
 
 
-
-/*
- * Just throws a error.
- *
- * @param object vowsContext, the vows context to add the topic.
- * @param object brokeContext, a given broke context.
- */
-Topic.topicError = function topicError(vowsContext, brokeContext) {
-    this.callback('Invalid process. Cannot execute test case.');
-};
 
 /*
  * Wrap vows callback function for better control flow.

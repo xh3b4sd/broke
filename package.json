@@ -1,6 +1,6 @@
 {
   "name": "broke",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Vowsjs layer for flexible unit and integration tests.",
   "keywords": ["testframework", "unit tests", "tests", "integration tests"],
   "author": "Tim Schindler <tim.schindler@adcloud.com>",

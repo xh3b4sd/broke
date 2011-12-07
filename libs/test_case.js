@@ -39,7 +39,7 @@ function TestCase() {};
  *
  * @return object vowsBatch, a valid vows batch.
  */
-TestCase.prototype.createBatch = function createBatch(brokeBatch) {
+TestCase.prototype.createBatch = function createBatch(brokeBatch, config) {
     var vowsBatch = {};
 
     Object.keys(brokeBatch).forEach(function(contextName) {
@@ -50,10 +50,13 @@ TestCase.prototype.createBatch = function createBatch(brokeBatch) {
         if(typeof brokeContext.assert !== 'object') var err = 'Invalid assert phase';
         if(typeof err === 'string') return log.error(new Error(err).stack);
 
+        // Setup the broke context.
         brokeContext.name = contextName;
         brokeContext.emitter = new EventEmitter;
+        brokeContext.customProcessors = config.processors || {};
+        brokeContext.customAssertions = config.assertions || {};
 
-        TestCase.createContext(vowsBatch, brokeContext, function(contextName, context) {
+        createContext(vowsBatch, brokeContext, function(contextName, context) {
             vowsBatch[contextName] = context;
         });
     });
@@ -65,7 +68,7 @@ TestCase.prototype.createBatch = function createBatch(brokeBatch) {
 
 /*
  *
- * Class functions.
+ * Private functions.
  *
  */
 
@@ -79,7 +82,7 @@ TestCase.prototype.createBatch = function createBatch(brokeBatch) {
  * @param object brokeContext, a given broke context.
  * @param function cb, callback to execute.
  */
-TestCase.createContext = function createContext(vowsBatch, brokeContext, cb) {
+function createContext(vowsBatch, brokeContext, cb) {
     var vowsContext = {};
 
     Manipulation.config(brokeContext);

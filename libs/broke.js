@@ -95,10 +95,7 @@ Broke.prototype.run = function run(module, config) {
     if(this.batches.length === 0) var err = 'No batches defined.';
     if(typeof err === 'string') return log.error(new Error(err).stack);
 
-    if(typeof config === 'object') {
-        if(typeof config.processors === 'object') this.processors = Topic.inject(config.processors);
-        if(typeof config.assertions === 'object') this.assertions = Assert.inject(config.assertions);
-    }
+    this.config = config || {};
 
     batches.call(this);
 
@@ -154,7 +151,7 @@ function batches() {
     var self = this;
 
     self.batches.forEach(function(batch) {
-        self.suite.addBatch(TestCase.createBatch(batch));
+        self.suite.addBatch(TestCase.createBatch(batch, self.config));
     });
 };
 

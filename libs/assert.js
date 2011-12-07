@@ -10,11 +10,6 @@
 var log = require('logerize');
 
 /*
- * Module variables.
- */
-var customAssertions = {};
-
-/*
  * Class definition.
  */
 function Assert() {};
@@ -37,24 +32,14 @@ function Assert() {};
  */
 Assert.prototype.create = function create(vowsContext, brokeContext) {
     Object.keys(brokeContext.assert).forEach(function(brokeAssertionName) {
-        var brokeAssertion = brokeContext.assert[brokeAssertionName];
+        var assertion = {
+            key: brokeAssertionName,
+            value: brokeContext.assert[brokeAssertionName]
+        };
 
-        if(typeof brokeAssertion === 'function') vowsContext[brokeAssertionName] = brokeAssertion;
-        else Assert.merge(vowsContext, brokeAssertionName, brokeAssertion);
+        if(typeof assertion.value === 'function') vowsContext[assertion.key] = assertion.value;
+        else Assert.merge(vowsContext, brokeContext, assertion);
     });
-};
-
-/*
- * Set injected custom assertions as local variable.
- *
- * @param object injectedAssertions, injected custom assertions.
- *
- * @return object customAssertions, injected custom assertions.
- */
-Assert.prototype.inject = function inject(injectedAssertions) {
-    customAssertions = injectedAssertions;
-
-    return customAssertions;
 };
 
 
@@ -71,16 +56,15 @@ Assert.prototype.inject = function inject(injectedAssertions) {
  * Merge custom assertions into a vows context.
  *
  * @param object vowsContext, the vows context to add the assertions.
- * @param string brokeAssertionName, name of the custom assertion to merge.
- * @param !function brokeAssertion, the expected parameter for a custom assertion.
+ * @param object brokeContext, a given broke context.
+ * @param object assertion, key value pair of a custom asserrtion.
  */
-Assert.merge = function merge(vowsContext, brokeAssertionName, brokeAssertion) {
-    var err = 'Invalid custom assertion "' + brokeAssertionName + '"'
-      , customAssertion = customAssertions[brokeAssertionName];
+Assert.merge = function merge(vowsContext, brokeContext, assertion) {
+    var err = 'Invalid custom assertion "' + assertion.key + '"'
+      , customAssertions = brokeContext.customAssertions[assertion.key];
 
-    if(typeof customAssertion !== 'function') return log.error(new Error(err).stack);
-
-    var methods = customAssertion(brokeAssertion);
+    if(typeof customAssertions === 'function') var methods = customAssertions(assertion.value);
+    else return log.error(new Error(err).stack);
 
     if(typeof methods !== 'object' || Array.isArray(methods)) return log.error(new Error(err).stack);
 

@@ -30,7 +30,7 @@ vows
         'call test() with string as first parameter': {
             topic: function() {
                 var firstSuite = Broke.test('first dummy test')
-                var secondSuite = Broke.test('second dummy test');
+                  , secondSuite = Broke.test('second dummy test');
 
                 this.callback(undefined, firstSuite, secondSuite);
             },
@@ -248,7 +248,7 @@ vows
                 this.callback(undefined, suite);
             },
             'should return a test suite including the defined batch and custom assertions': function(err, suite) {
-                var keys = Object.keys(suite.assertions);
+                var keys = Object.keys(suite.config.assertions);
 
                 var assertionNames = [
                     'statusCode',
@@ -260,7 +260,7 @@ vows
                 assert.isNull(err);
                 assert.isObject(suite);
                 assert.isArray(suite.suite.batches);
-                assert.isObject(suite.assertions);
+                assert.isObject(suite.config.assertions);
                 assert.deepEqual(keys, assertionNames);
                 assert.equal(suite.suite.subject, 'dummy test suite');
             }
@@ -279,7 +279,7 @@ vows
                 this.callback(undefined, suite);
             },
             'should return a test suite including the defined batch and custom processors': function(err, suite) {
-                var keys = Object.keys(suite.processors);
+                var keys = Object.keys(suite.config.processors);
 
                 var processorNames = [
                     'method',
@@ -289,7 +289,7 @@ vows
                 assert.isNull(err);
                 assert.isObject(suite);
                 assert.isArray(suite.suite.batches);
-                assert.isObject(suite.processors);
+                assert.isObject(suite.config.processors);
                 assert.deepEqual(keys, processorNames);
                 assert.equal(suite.suite.subject, 'dummy test suite');
             }
